@@ -15,6 +15,25 @@ function App() {
     // a list of tuples to store each bday as a tuple pair [bday, name]
     const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string][]>([]);
 
+    const addNewBday = async (newDate:string, newName:string) => {
+        const response = await fetch('http://localhost:5000/add-bday', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                date: newDate,
+                name: newName,
+            })
+        });
+
+        if (!response.ok) {
+            alert('Error in adding new bday!');
+            return;
+        }
+
+        const data = await response.json();
+        console.log(data.message);
+    }
+
     const handleButtonClick = () => {
         console.log(dateSelected?.format('DD-MMMM-YYYY'));
         console.log("name = " + nameEntered);
@@ -24,6 +43,7 @@ function App() {
             const newName:string = nameEntered;
             const newBdayObject:[string, string] = [newDate, newName];
             setBdayObjects(prev => [...prev, newBdayObject]);
+            addNewBday(newDate, newName);
         }
         // clear the fields
         setDateSelected(null);
