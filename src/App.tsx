@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 function App() {
@@ -14,6 +14,28 @@ function App() {
     const [nameEntered, setNameEntered] = useState<string>('');
     // a list of tuples to store each bday as a tuple pair [bday, name]
     const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string][]>([]);
+
+    const fetchAllBdays = async () => {
+        const response = await fetch('http://localhost:5000/all-bday', {
+            method: 'GET',
+            headers: {'Content-Type':'application/json'},
+        })
+
+        if (!response.ok) {
+            alert('Error in getting all bdays!');
+            return;
+        }
+
+        const data = await response.json();
+        data.bdays.forEach((bday: { date: string; name: string; }) => {
+            setBdayObjects((prev) => [...prev, [bday.date, bday.name]])
+        });
+        console.log(data.message);
+    }
+
+    useEffect(() => {
+        fetchAllBdays();
+    }, [])
 
     const addNewBday = async (newDate:string, newName:string) => {
         const response = await fetch('http://localhost:5000/add-bday', {

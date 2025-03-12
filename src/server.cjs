@@ -54,7 +54,7 @@ app.post('/add-bday', (req, res) => {
 app.get('/all-bday', (req, res) => {
     try {
         const data = readTableData();
-        return res.status(200).json({ message:'Successfully retrieved all bdays.', data: data });
+        return res.status(200).json({ message:'Successfully retrieved all bdays.', bdays: data });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Server error while retrieving all bdays.' });
