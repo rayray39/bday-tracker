@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Stack, TextField, Typography } from '@mui/material';
 import './App.css'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -56,7 +56,7 @@ function App() {
         console.log(data.message);
     }
 
-    const handleButtonClick = () => {
+    const handleAddBday = () => {
         console.log(dateSelected?.format('DD-MMMM-YYYY'));
         console.log("name = " + nameEntered);
         if (dateSelected && nameEntered) {
@@ -72,13 +72,21 @@ function App() {
         setNameEntered('');
     }
 
+    const addToCloseFriends = (date:string, name:string) => {
+        console.log(`adding to close friends, date: ${date}, name:${name}`);
+    }
+
+    const deleteBday = (date:string, name:string)  => {
+        console.log(`deleting bday, date: ${date}, name:${name}`)
+    }
+
     return (
         <Box sx={{
             display:'flex',
             flexDirection:'column',
             alignItems:'center',
             margin:'auto',
-            marginTop:'80px',
+            marginTop:'40px',
             overflowX:'hidden'
         }}>
             <Stack spacing={2}>
@@ -86,13 +94,29 @@ function App() {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker sx={{width:'400px'}} value={dateSelected} onChange={(newValue) => setDateSelected(newValue)}/>
                 </LocalizationProvider>
-                <Button sx={{width:'400px'}} variant='contained' onClick={handleButtonClick}>Add Bday</Button>
+                <Button sx={{width:'400px'}} variant='contained' onClick={handleAddBday}>Add Bday</Button>
             </Stack>
 
-            <Stack>
+            <Stack spacing={2} sx={{width:'400px', marginTop:'60px'}}>
                 {
                     bdayObjects.map((object, index) => (
-                        <Box key={index}>{object[0]} - {object[1]}</Box>
+                        <Box key={index}>
+                            <Card variant='outlined'>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        {object[1]}
+                                    </Typography>
+                                    <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{object[0]}</Typography>
+                                </CardContent>
+                                <CardActions sx={{
+                                    display:'flex',
+                                    justifyContent:'space-between'
+                                }}>
+                                    <Button variant='outlined' onClick={() => addToCloseFriends(object[0], object[1])} size="small">Add to Close Friends</Button>
+                                    <Button variant='outlined' onClick={() => deleteBday(object[0], object[1])} size="small">Delete</Button>
+                                </CardActions>
+                            </Card>
+                        </Box>
                     ))
                 }
             </Stack>
