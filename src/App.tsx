@@ -15,6 +15,7 @@ function App() {
     // a list of tuples to store each bday as a tuple pair [bday, name]
     const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string, closeFriend:string][]>([]);
 
+    // fetches all the bdays in data.json and display it in the ui
     const fetchAllBdays = async () => {
         const response = await fetch('http://localhost:5000/all-bday', {
             method: 'GET',
@@ -37,6 +38,7 @@ function App() {
         fetchAllBdays();
     }, [])
 
+    // adds a new bday into data.json
     const addNewBday = async (newDate:string, newName:string) => {
         const response = await fetch('http://localhost:5000/add-bday', {
             method: 'POST',
@@ -57,6 +59,7 @@ function App() {
         console.log(data.message);
     }
 
+    // makes a call to addNewBday and updates the bdayObjects list
     const handleAddBday = () => {
         console.log(dateSelected?.format('DD-MMMM-YYYY'));
         console.log("name = " + nameEntered);
@@ -73,6 +76,7 @@ function App() {
         setNameEntered('');
     }
 
+    // updates the bday to be a close friend
     const addToCloseFriends = async (date:string, name:string) => {
         const response = await fetch('http://localhost:5000/add-to-close-friends', {
             method:'POST',
@@ -101,6 +105,7 @@ function App() {
         );
     }
 
+    // removes the bday from data.json and bdayObjects
     const deleteBday = async (date:string, name:string)  => {
         const response = await fetch('http://localhost:5000/delete-bday', {
             method:'DELETE',
