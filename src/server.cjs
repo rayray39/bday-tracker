@@ -30,6 +30,7 @@ const writeTableData = (data) => {
     }
 };
 
+// add a new bday {date, name} to the list of bdays in data.json
 app.post('/add-bday', (req, res) => {
     const {date, name} = req.body;
 
@@ -49,6 +50,7 @@ app.post('/add-bday', (req, res) => {
     }
 })
 
+// get all bdays in the list of bdays in data.json
 app.get('/all-bday', (req, res) => {
     try {
         const data = readTableData();
