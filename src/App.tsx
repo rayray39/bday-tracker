@@ -129,6 +129,14 @@ function App() {
         setBdayObjects(prev => prev.filter(([existingDate, existingName]) => !(existingDate === date && existingName === name)));
     }
 
+    const displayAll = () => {
+        console.log('displaying all bdays');
+    }
+
+    const displayCloseFriends = () => {
+        console.log('displaying close friends');
+    }
+
     return (
         <Box sx={{
             display:'flex',
@@ -139,7 +147,7 @@ function App() {
             overflowX:'hidden'
         }}>
             <Stack spacing={2}>
-            <TextField id="filled-basic" label="Enter name" variant="filled" value={nameEntered} onChange={(event) => setNameEntered(event.target.value)}/>
+                <TextField id="filled-basic" label="Enter name" variant="filled" value={nameEntered} onChange={(event) => setNameEntered(event.target.value)}/>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker sx={{width:'400px'}} value={dateSelected} onChange={(newValue) => setDateSelected(newValue)}/>
                 </LocalizationProvider>
@@ -147,6 +155,10 @@ function App() {
             </Stack>
 
             <Stack spacing={2} sx={{width:'400px', marginTop:'60px'}}>
+                <Stack sx={{display:'flex', justifyContent:'space-between'}} direction={'row'}>
+                    <Button onClick={displayAll} variant='outlined'>All</Button>
+                    <Button onClick={displayCloseFriends} variant='outlined'>Close Friends</Button>
+                </Stack>
                 {
                     bdayObjects.map((object, index) => (
                         <Box key={index}>
