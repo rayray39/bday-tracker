@@ -12,18 +12,18 @@ function App() {
     const [dateSelected, setDateSelected] = useState<Dayjs | null>(null);
     // the name that has been entered into the textfield
     const [nameEntered, setNameEntered] = useState<string>('');
-    // the list of dates that have been selected and saved
-    const [datesSaved, setDatesSaved] = useState<string[]>([]);
-    // the list of names that have been saved
-    const [names, setNames] = useState<string[]>([]);
+    // a list of tuples to store each bday as a tuple pair [bday, name]
+    const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string][]>([]);
 
     const handleButtonClick = () => {
         console.log(dateSelected?.format('DD-MMMM-YYYY'));
         console.log("name = " + nameEntered);
         if (dateSelected && nameEntered) {
-            // append the new date and new name into dateSaved array and names array 
-            setDatesSaved(prev => [...prev, dateSelected.format('DD-MMMM-YYYY')]);
-            setNames(prev => [...prev, nameEntered]);
+            // append the new date and new name into bdayObjects array
+            const newDate:string = dateSelected.format('DD-MMMM-YYYY');
+            const newName:string = nameEntered;
+            const newBdayObject:[string, string] = [newDate, newName];
+            setBdayObjects(prev => [...prev, newBdayObject]);
         }
         // clear the fields
         setDateSelected(null);
@@ -48,9 +48,11 @@ function App() {
             </Stack>
 
             <Stack>
-                {datesSaved.map((date, index) => (
-                    <Box key={index}>{names[index]}-{date}</Box>
-                ))}
+                {
+                    bdayObjects.map((object, index) => (
+                        <Box key={index}>{object[0]} - {object[1]}</Box>
+                    ))
+                }
             </Stack>
         </Box>
     );
