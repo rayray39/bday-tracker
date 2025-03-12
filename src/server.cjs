@@ -32,7 +32,7 @@ const writeTableData = (data) => {
 
 // add a new bday {date, name} to the list of bdays in data.json
 app.post('/add-bday', (req, res) => {
-    const {date, name} = req.body;
+    const {date, name, closeFriend} = req.body;
 
     if (!date || !name) {
         return res.status(400).json({ message:'Error in adding bday, date or name is missing.' });
@@ -40,10 +40,10 @@ app.post('/add-bday', (req, res) => {
 
     try {
         const data = readTableData();
-        data.push({date, name});
+        data.push({date, name, closeFriend});
         writeTableData(data);
 
-        return res.status(200).json({ message:`Successfully added new bday, date:${date}, name:${name}` });
+        return res.status(200).json({ message:`Successfully added new bday, date:${date}, name:${name}, closeFriend:${closeFriend}` });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Server error while saving new bday.' });
@@ -81,6 +81,33 @@ app.delete('/delete-bday', (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Server error while deleting bday.' });
+    }
+})
+
+// add bday to close friends (label the bday in data.json as part of close friends)
+app.post('/add-to-close-friends', (req, res) => {
+    const {closeFriendDate, closeFriendName} = req.body;
+
+    if (!closeFriendDate || !closeFriendName) {
+        return res.status(400).json({ message:'Error in adding to close friends, date or name is missing.' });
+    }
+
+    try {
+        const allBdays = readTableData();
+        if (!allBdays) {
+            return res.status(400).json({ message:'Error in adding to close friends, empty data.' });
+        }
+        const newBdays = allBdays.map(({date, name, closeFriend}) => 
+            date === closeFriendDate && name === closeFriendName
+                    ? {date, name, closeFriend: 'yes'} 
+                    : {date, name, closeFriend}    
+        );
+        writeTableData(newBdays);
+
+        return res.status(200).json({ message:`Successfully added to close friends, date:${closeFriendName}, name:${closeFriendName}` });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Server error while adding to close friends.' });
     }
 })
 

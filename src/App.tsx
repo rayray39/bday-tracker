@@ -13,7 +13,7 @@ function App() {
     // the name that has been entered into the textfield
     const [nameEntered, setNameEntered] = useState<string>('');
     // a list of tuples to store each bday as a tuple pair [bday, name]
-    const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string][]>([]);
+    const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string, closeFriend:string][]>([]);
 
     const fetchAllBdays = async () => {
         const response = await fetch('http://localhost:5000/all-bday', {
@@ -27,8 +27,8 @@ function App() {
         }
 
         const data = await response.json();
-        data.bdays.forEach((bday: { date: string; name: string; }) => {
-            setBdayObjects((prev) => [...prev, [bday.date, bday.name]])
+        data.bdays.forEach((bday: { date: string; name: string; closeFriend: string }) => {
+            setBdayObjects((prev) => [...prev, [bday.date, bday.name, bday.closeFriend]])
         });
         console.log(data.message);
     }
@@ -44,6 +44,7 @@ function App() {
             body: JSON.stringify({
                 date: newDate,
                 name: newName,
+                closeFriend: 'no'
             })
         });
 
@@ -63,7 +64,7 @@ function App() {
             // append the new date and new name into bdayObjects array
             const newDate:string = dateSelected.format('DD-MMMM-YYYY');
             const newName:string = nameEntered;
-            const newBdayObject:[string, string] = [newDate, newName];
+            const newBdayObject:[string, string, string] = [newDate, newName, 'no'];
             setBdayObjects(prev => [...prev, newBdayObject]);
             addNewBday(newDate, newName);
         }
@@ -72,8 +73,32 @@ function App() {
         setNameEntered('');
     }
 
-    const addToCloseFriends = (date:string, name:string) => {
+    const addToCloseFriends = async (date:string, name:string) => {
+        const response = await fetch('http://localhost:5000/add-to-close-friends', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+                closeFriendDate: date,
+                closeFriendName: name
+            })
+        })
+
+        if (!response.ok) {
+            alert('Error in adding to close friends!');
+            return;
+        }
+
         console.log(`adding to close friends, date: ${date}, name:${name}`);
+        const data = await response.json();
+        console.log(data.message);
+
+        setBdayObjects(prev =>
+            prev.map(([existingDate, existingName, isCloseFriend]) =>
+                existingDate === date && existingName === name
+                    ? [existingDate, existingName, 'yes'] // Update 'no' to 'yes'
+                    : [existingDate, existingName, isCloseFriend] // Keep the rest unchanged
+            )
+        );
     }
 
     const deleteBday = async (date:string, name:string)  => {
