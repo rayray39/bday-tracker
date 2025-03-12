@@ -61,6 +61,29 @@ app.get('/all-bday', (req, res) => {
     }
 })
 
+// remove bday from the existing list of bdays in data.json
+app.delete('/delete-bday', (req, res) => {
+    const {deletingDate, deletingName} = req.body;
+
+    if (!deletingDate || !deletingName) {
+        return res.status(400).json({ message:'Error in deleting bday, date or name is missing.' });
+    }
+
+    try {
+        const allBdays = readTableData();
+        if (!allBdays) {
+            return res.status(400).json({ message:'Error in deleting bday, empty data.' });
+        }
+        const newBdays = allBdays.filter(({date, name}) => !(date === deletingDate && name === deletingName));
+        writeTableData(newBdays);
+
+        return res.status(200).json({ message:`Successfully deleted bday, date:${deletingDate}, name:${deletingName}` });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Server error while deleting bday.' });
+    }
+})
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

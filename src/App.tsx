@@ -76,8 +76,27 @@ function App() {
         console.log(`adding to close friends, date: ${date}, name:${name}`);
     }
 
-    const deleteBday = (date:string, name:string)  => {
-        console.log(`deleting bday, date: ${date}, name:${name}`)
+    const deleteBday = async (date:string, name:string)  => {
+        const response = await fetch('http://localhost:5000/delete-bday', {
+            method:'DELETE',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+                deletingDate: date,
+                deletingName: name
+            })
+        })
+
+        if (!response.ok) {
+            alert('Error in deleting bday!');
+            return;
+        }
+
+        console.log(`deleting bday, date: ${date}, name:${name}`);
+        const data = await response.json();
+        console.log(data.message);
+
+        // remove the bday by filtering out from existing array
+        setBdayObjects(prev => prev.filter(([existingDate, existingName]) => !(existingDate === date && existingName === name)));
     }
 
     return (
