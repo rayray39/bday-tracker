@@ -14,6 +14,8 @@ function App() {
     const [nameEntered, setNameEntered] = useState<string>('');
     // a list of tuples to store each bday as a tuple pair [bday, name]
     const [bdayObjects, setBdayObjects] = useState<[bday:string, name:string, closeFriend:string][]>([]);
+    // an auxilliary list of tuples to store each bday as a tuple pair, mainly used for display
+    const [displayedBdayObjects, setDisplayedBdayObjects] = useState<[bday:string, name:string, closeFriend:string][]>([]);
 
     // fetches all the bdays in data.json and display it in the ui
     const fetchAllBdays = async () => {
@@ -30,6 +32,9 @@ function App() {
         const data = await response.json();
         data.bdays.forEach((bday: { date: string; name: string; closeFriend: string }) => {
             setBdayObjects((prev) => [...prev, [bday.date, bday.name, bday.closeFriend]])
+        });
+        data.bdays.forEach((bday: { date: string; name: string; closeFriend: string }) => {
+            setDisplayedBdayObjects((prev) => [...prev, [bday.date, bday.name, bday.closeFriend]])
         });
         console.log(data.message);
     }
@@ -69,6 +74,7 @@ function App() {
             const newName:string = nameEntered;
             const newBdayObject:[string, string, string] = [newDate, newName, 'no'];
             setBdayObjects(prev => [...prev, newBdayObject]);
+            setDisplayedBdayObjects(prev => [...prev, newBdayObject]);
             addNewBday(newDate, newName);
         }
         // clear the fields
@@ -103,6 +109,14 @@ function App() {
                     : [existingDate, existingName, isCloseFriend] // Keep the rest unchanged
             )
         );
+        setDisplayedBdayObjects(prev =>
+            prev.map(([existingDate, existingName, isCloseFriend]) =>
+                existingDate === date && existingName === name
+                    ? [existingDate, existingName, 'yes'] // Update 'no' to 'yes'
+                    : [existingDate, existingName, isCloseFriend] // Keep the rest unchanged
+            )
+        );
+        alert(`Successfully added ${name} to close friends!`);
     }
 
     // removes the bday from data.json and bdayObjects
@@ -127,14 +141,17 @@ function App() {
 
         // remove the bday by filtering out from existing array
         setBdayObjects(prev => prev.filter(([existingDate, existingName]) => !(existingDate === date && existingName === name)));
+        setDisplayedBdayObjects(prev => prev.filter(([existingDate, existingName]) => !(existingDate === date && existingName === name)));
     }
 
     const displayAll = () => {
         console.log('displaying all bdays');
+        setDisplayedBdayObjects(bdayObjects);
     }
 
     const displayCloseFriends = () => {
         console.log('displaying close friends');
+        setDisplayedBdayObjects(prev => prev.filter(object => object[2] === 'yes'));
     }
 
     return (
@@ -160,7 +177,8 @@ function App() {
                     <Button onClick={displayCloseFriends} variant='outlined'>Close Friends</Button>
                 </Stack>
                 {
-                    bdayObjects.map((object, index) => (
+                    displayedBdayObjects.map((object, index) => (
+                        // object[0] = date, object[1] = name, object[2] = closeFriend
                         <Box key={index}>
                             <Card variant='outlined'>
                                 <CardContent>
