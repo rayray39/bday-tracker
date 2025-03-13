@@ -9,7 +9,26 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json())
 
-const dataFilePath = path.join(__dirname, '../data/data.json');
+const dataFolderPath = path.join(__dirname, '../data');
+const dataFilePath = path.join(dataFolderPath, 'data.json');
+
+// ensure data.json exists
+const ensureDataFileExists = () => {
+    if (!fs.existsSync(dataFolderPath)) {
+        console.log('data folder not found. Creating one...');
+        fs.mkdirSync(dataFolderPath);
+    } else {
+        console.log('data folder already exists...');
+    }
+
+    if (!fs.existsSync(dataFilePath)) {
+        console.log('data.json not found. Creating a new one in data folder...');
+        fs.writeFileSync(dataFilePath, JSON.stringify([], null, 2), 'utf-8');
+    } else {
+        console.log('data.json already exists in data folder...');
+    }
+};
+ensureDataFileExists();
 
 // read data from json file.
 const readTableData = () => {

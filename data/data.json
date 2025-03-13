@@ -1,17 +1,12 @@
 [
   {
-    "date": "04-April-2025",
+    "date": "02-March-2025",
     "name": "sally",
-    "closeFriend": "yes"
+    "closeFriend": "no"
   },
   {
-    "date": "01-March-2017",
+    "date": "31-December-2015",
     "name": "harry",
     "closeFriend": "yes"
-  },
-  {
-    "date": "13-July-2019",
-    "name": "sam",
-    "closeFriend": "no"
   }
 ]
