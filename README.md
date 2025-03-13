@@ -1,54 +1,26 @@
-# React + TypeScript + Vite
+# Bday Tracker
+A simple tool to track all your friends' birthdays in one place, so you will never forget to wish them a happy birthday.  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The project was built using Vite as the build tool, TypeScript, ReactJS and Express.JS.
 
-Currently, two official plugins are available:
+# Getting Started
+## clone the repository
+1. `git clone https://github.com/rayray39/bday-tracker.git`  
+2. `cd <your-project-folder>`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## install all dependencies
+1. `npm install`
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## run the project
+1. run `npm run build`
+2. add `start` command into `package.json` under `scripts` if not already added.  
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+"scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "start": "node src/server.cjs",
+    "lint": "eslint .",
+    "preview": "vite preview"
+},
 ```
+3. run `npm start`
